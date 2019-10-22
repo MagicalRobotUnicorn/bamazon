@@ -1,1 +1,33 @@
 background of logo: #f6eeba
+
+create database bamazon
+
+create table products
+
+products table should include the following:
+   * item_id (unique id for each product)
+
+   * product_name (Name of product)
+
+   * department_name
+
+   * price (cost to customer)
+
+   * stock_quantity (how much of the product is available in stores)
+
+
+inquierer:
+
+id of the product they would like to buy
+how many units of the product
+if there isn't enough of the product, show message...
+
+if successful:
+
+Update database
+Show user the total for their purchase
+
+manager view:
+
+Supervisor view:
+
