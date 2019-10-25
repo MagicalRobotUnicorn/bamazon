@@ -1,12 +1,3 @@
-// SELECT departments.department_id, departments.department_name, departments.over_head_costs, (SUM(products.product_sales) - departments.over_head_costs) AS total_sales
-// FROM departments
-// LEFT JOIN products ON departments.department_name=products.department_name
-// GROUP BY department_id
-
-// * View Product Sales by Department
-
-// * Create New Department
-
 var art = require("ascii-art");
 var mysql = require("mysql");
 var Table = require("cli-table");
@@ -39,9 +30,8 @@ async function executeQuery(sql) {
 }
 
 async function displayTable(results) {
-  console.log(results);
   var table = new Table({
-    head: ['Department ID', 'Department Name', 'Department Name', 'Overhead Cost', 'Total Sales']
+    head: ['Department ID', 'Department Name', 'Overhead Cost', 'Total Sales']
   });
   var allResults = [];
 
@@ -54,11 +44,8 @@ async function displayTable(results) {
     theseResults.push(results[i]["total_sales"]);
 
     allResults.push(theseResults);
+    table.push(theseResults);
   }
-  for (var i = 0; i < allResults.length; i++) {
-    table.push(allResults[i]);
-  }
-
 
   await console.log(table.toString());
 
