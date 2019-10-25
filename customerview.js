@@ -17,14 +17,30 @@ var db = mysql.createConnection({
   database: "bamazon"
 });
 
-async function executeQuery(sql, cb) {
-  db.query(sql, function (err, result) {
-    if (err) throw err;
-    cb(result);
-  })
+  // var promise1 = new Promise(function(resolve, reject) {
+  //   art.font('Quarks Bamazon', 'Doom', function (rendered) {
+  //     console.log(rendered);
+  //     console.log("Your source for legally sourced items from across the Federation.");
+  //     console.log("All prices shown in Federation Credits.")
+  //   });
+  //   executeQuery('SELECT * from products', displayTable);
+  //   resolve();
+  // });
+// This needs to return a promise
+async function executeQuery(sql) {
+  var promise1 = new Promise(function(resolve, reject){
+    db.query(sql, function (err, result) {
+      if (err)  {
+        reject(err)
+      }
+      resolve(result);
+    })
+  });
+  return promise1;
 }
 
 async function displayTable(results) {
+  console.log('inside table');
   var table = new Table({
     head: ['Item ID', 'Prouct Name', 'Department Name', 'Price (C)', 'Quantity']
   });
@@ -45,12 +61,13 @@ async function displayTable(results) {
     table.push(allResults[i]);
   }
 
+
   await console.log(table.toString());
 
 }
 
-function shopping() {
-  
+async function shopping() {
+
   // var promise1 = new Promise(function(resolve, reject) {
   //   art.font('Quarks Bamazon', 'Doom', function (rendered) {
   //     console.log(rendered);
@@ -58,19 +75,19 @@ function shopping() {
   //     console.log("All prices shown in Federation Credits.")
   //   });
   //   executeQuery('SELECT * from products', displayTable);
+  //   resolve();
   // });
-  
+
   // promise1.then(
-    
-  
-  
 
   art.font('Quarks Bamazon', 'Doom', function (rendered) {
     console.log(rendered);
     console.log("Your source for legally sourced items from across the Federation.");
     console.log("All prices shown in Federation Credits.")
   });
-  executeQuery('SELECT * from products', displayTable);
+  let queryData = await executeQuery('SELECT * from products');
+  displayTable(queryData);
+
 
   inquirer
     .prompt([
@@ -107,26 +124,35 @@ function shopping() {
                 .then(function (answer) {
                   if (answer.confirmPurchase === "YES") {
                     console.log("Great.. we will charge your account " + orderTotal + " credits and have that sent to your quarters.");
-                    db.query('UPDATE PRODUCTS SET ? WHERE ?',[
+                    db.query('UPDATE PRODUCTS SET ? WHERE ?', [
                       {
                         stock_quantity: result[0]["stock_quantity"] - orderQuantity
                       },
                       {
                         item_id: result[0]["item_id"]
                       }
-                    ], function(error, result){
+                    ], function (error, result) {
                       shopping();
                     })
                   }
                   else if (answer.confirmPurchase === "NO") {
-                    console.log("Sorry to hear that");
+                    console.log("Sorry to hear that.");
                     shopping();
                   }
                 });
             }
+            else {
+              console.log("It doesn't look like we have that much in stock.")
+              shopping();
+            }
+          }
+          else {
+            console.log("Please select a valid item...");
+            shopping();
           }
         })
-    }));
+    });
+
 }
 
 
