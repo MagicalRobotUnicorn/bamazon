@@ -62,11 +62,7 @@ async function displayTable(results) {
   await console.log(table.toString());
 }
 
-art.font('Quarks Bamazon', 'Doom', function (rendered) {
-  console.log(rendered);
-  console.log("Welcome to the managers view of Quark's Bamazon.");
-  console.log("All prices shown in Federation Credits.")
-});
+
 
 async function management(){
   // art.font('Quarks Bamazon', 'Doom', function (rendered) {
@@ -74,8 +70,11 @@ async function management(){
   //   console.log("Welcome to the managers view of Quark's Bamazon.");
   //   console.log("All prices shown in Federation Credits.")
   // });
-  // let queryData = await executeQuery('SELECT * from products');
-  // displayTable(queryData);
+  await art.font('Quarks Bamazon', 'Doom', function (rendered) {
+    console.log(rendered);
+    console.log("Welcome to the managers view of Quark's Bamazon.");
+    console.log("All prices shown in Federation Credits.")
+  });
 
   // Inquierer main menu
   inquirer
@@ -102,6 +101,33 @@ async function management(){
     else if (answer.menuItems === "Add to Inventory"){
       let queryData = await executeQuery('SELECT * from products');
       displayTable(queryData);
+      inquirer
+      .prompt([
+      {
+        name: "item_id",
+        type: "input",
+        message: "What is the id of the product?"
+      },
+      {
+        name: "quantity_added",
+        type: "input",
+        message: "How much stock will be added?"
+      }]).then(function(answer){
+        console.log(queryData[answer.item_id - 1]["stock_quantity"]);
+        db.query('UPDATE PRODUCTS SET ? WHERE ?', [
+          {
+            stock_quantity: Number(Number(queryData[answer.item_id - 1]["stock_quantity"]) + Number(answer.quantity_added))
+          },
+          {
+            item_id: answer.item_id
+          }
+        ], function(error, result){
+          if (error){console.log(error);}
+          console.log("Success!");
+          management();
+        }
+        );
+      });
     }
     else if (answer.menuItems === "Add New Product"){
       inquirer
@@ -130,8 +156,9 @@ async function management(){
     ]).then(function (answer) {
 
       db.query(`insert into products (product_name, department_name, price, stock_quantity) values ("${answer.product_name}", "${answer.department_name}", ${answer.price}, ${answer.stock_quantity})`, function(error, result){
-                  console.log("Error: ", error);
-                  console.log("Result: ", result);
+                  if (error){console.log(error);}
+                  console.log("Success!");
+                  management();
                 });
     }
     );
