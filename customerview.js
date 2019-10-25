@@ -126,7 +126,8 @@ async function shopping() {
                     console.log("Great.. we will charge your account " + orderTotal + " credits and have that sent to your quarters.");
                     db.query('UPDATE PRODUCTS SET ? WHERE ?', [
                       {
-                        stock_quantity: result[0]["stock_quantity"] - orderQuantity
+                        stock_quantity: result[0]["stock_quantity"] - orderQuantity,
+                        product_sales: result[0]["product_sales"] + orderTotal
                       },
                       {
                         item_id: result[0]["item_id"]
