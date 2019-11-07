@@ -9,4 +9,4 @@ The supervisor can view the items by department as well as the calculated profit
 
 ## Design
 
-This application has a Star Trek theme (Quark's is the enterprising bartender on board Deep Space 9). All prices are shown in Federation Credits, although functionality will be added in the future to accept gold pressed latinum.
+This application has a Star Trek theme (Quark is the enterprising bartender on board Deep Space 9). All prices are shown in Federation Credits, although functionality will be added in the future to accept gold pressed latinum.
