@@ -66,7 +66,7 @@ async function supervisor() {
     })
     .then(async function (answer) {
       if (answer.menuItems === "View Product Sales by Department") {
-        let queryData = await executeQuery('SELECT departments.department_id, departments.department_name, departments.over_head_costs, (0 + SUM(products.product_sales) - departments.over_head_costs) AS total_sales FROM departments LEFT JOIN products ON departments.department_name=products.department_name GROUP BY department_id');
+        let queryData = await executeQuery('SELECT departments.department_id, departments.department_name, departments.over_head_costs, (SUM(products.product_sales) - departments.over_head_costs) AS total_sales FROM departments LEFT JOIN products ON departments.department_name=products.department_name GROUP BY department_id');
         displayTable(queryData);
         supervisor();
       }
