@@ -17,16 +17,6 @@ var db = mysql.createConnection({
   database: "bamazon"
 });
 
-  // var promise1 = new Promise(function(resolve, reject) {
-  //   art.font('Quarks Bamazon', 'Doom', function (rendered) {
-  //     console.log(rendered);
-  //     console.log("Your source for legally sourced items from across the Federation.");
-  //     console.log("All prices shown in Federation Credits.")
-  //   });
-  //   executeQuery('SELECT * from products', displayTable);
-  //   resolve();
-  // });
-// This needs to return a promise
 async function executeQuery(sql) {
   var promise1 = new Promise(function(resolve, reject){
     db.query(sql, function (err, result) {
@@ -67,18 +57,6 @@ async function displayTable(results) {
 }
 
 async function shopping() {
-
-  // var promise1 = new Promise(function(resolve, reject) {
-  //   art.font('Quarks Bamazon', 'Doom', function (rendered) {
-  //     console.log(rendered);
-  //     console.log("Your source for legally sourced items from across the Federation.");
-  //     console.log("All prices shown in Federation Credits.")
-  //   });
-  //   executeQuery('SELECT * from products', displayTable);
-  //   resolve();
-  // });
-
-  // promise1.then(
 
   art.font('Quarks Bamazon', 'Doom', function (rendered) {
     console.log(rendered);

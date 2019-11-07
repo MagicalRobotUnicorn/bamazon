@@ -41,7 +41,12 @@ async function displayTable(results) {
     theseResults.push(results[i]["department_id"]);
     theseResults.push(results[i]["department_name"]);
     theseResults.push(results[i]["over_head_costs"]);
-    theseResults.push(results[i]["total_sales"]);
+    if (results[i]["total_sales"] === null){
+      theseResults.push(0 - results[i]["over_head_costs"]);
+    }
+    else {
+      theseResults.push(results[i]["total_sales"]);
+    }
 
     allResults.push(theseResults);
     table.push(theseResults);
@@ -61,7 +66,7 @@ async function supervisor() {
     })
     .then(async function (answer) {
       if (answer.menuItems === "View Product Sales by Department") {
-        let queryData = await executeQuery('SELECT departments.department_id, departments.department_name, departments.over_head_costs, (SUM(products.product_sales) - departments.over_head_costs) AS total_sales FROM departments LEFT JOIN products ON departments.department_name=products.department_name GROUP BY department_id');
+        let queryData = await executeQuery('SELECT departments.department_id, departments.department_name, departments.over_head_costs, (0 + SUM(products.product_sales) - departments.over_head_costs) AS total_sales FROM departments LEFT JOIN products ON departments.department_name=products.department_name GROUP BY department_id');
         displayTable(queryData);
         supervisor();
       }
@@ -78,7 +83,7 @@ async function supervisor() {
               type: "input",
               message: "What is the over head cost of the department?"
             }]).then(async function (answer) {
-              db.query(`insert into departments (department_name, over_head_costs, total_sales) values ("${answer.department_name}", ${answer.over_head_cost}, 0)`, function (error, result) {
+              db.query(`insert into departments (department_name, over_head_costs) values ("${answer.department_name}", ${answer.over_head_cost})`, function (error, result) {
                 if (error) { console.log(error); }
                 console.log("Success!");
                 supervisor();
